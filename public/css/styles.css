@@ -1,0 +1,136 @@
+/* Inter font family from Google Fonts is linked in HTML */
+body {
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar for Webkit browsers (Chrome, Safari) */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom scrollbar for IE, Edge */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Prose adjustments for static content pages */
+.prose {
+  color: #374151; /* gray-700 */
+}
+.dark .prose {
+  color: #D1D5DB; /* gray-300 */
+}
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  color: #1F2937; /* gray-800 */
+}
+.dark .prose h1, .dark .prose h2, .dark .prose h3, .dark .prose h4, .dark .prose h5, .dark .prose h6 {
+  color: #F9FAFB; /* gray-50 */
+}
+.prose a {
+  color: #EF4444; /* primary color (red-500) */
+  text-decoration: none;
+}
+.prose a:hover {
+  text-decoration: underline;
+}
+.prose strong {
+ color: #111827; /* gray-900 */
+}
+.dark .prose strong {
+ color: #ffffff; /* white */
+}
+.prose ul > li::before {
+    background-color: #6B7280; /* gray-500 */
+}
+.dark .prose ul > li::before {
+    background-color: #9CA3AF; /* gray-400 */
+}
+
+/* Additional styling for active category button */
+.category-btn.active {
+  background-color: #EF4444; /* Tailwind red-500 */
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+.category-btn:not(.active) {
+  background-color: white; /* Default for light mode */
+  color: #374151; /* gray-700 */
+}
+.dark .category-btn:not(.active) {
+  background-color: #374151; /* gray-700 for dark mode */
+  color: #D1D5DB; /* gray-300 */
+}
+.dark .category-btn:not(.active):hover {
+    background-color: #4B5563; /* gray-600 */
+}
+.category-btn:not(.active):hover {
+    background-color: #F3F4F6; /* gray-100 */
+}
+
+/* Sticky category nav styling */
+#category-nav.is-sticky {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Testimonial Carousel Dots */
+.testimonial-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #9CA3AF; /* gray-400 */
+    transition: background-color 0.3s ease;
+}
+.testimonial-dot.active {
+    background-color: #EF4444; /* primary */
+}
+.dark .testimonial-dot {
+    background-color: #4B5563; /* gray-600 */
+}
+.dark .testimonial-dot.active {
+    background-color: #EF4444; /* primary */
+}
+
+/* Product card skeleton loader (basic example) */
+.skeleton-card {
+  background-color: #e5e7eb; /* gray-200 */
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.dark .skeleton-card {
+  background-color: #374151; /* gray-700 */
+}
+.skeleton-image {
+  height: 12rem; /* h-48 */
+  background-color: #d1d5db; /* gray-300 */
+}
+.dark .skeleton-image {
+  background-color: #4b5563; /* gray-600 */
+}
+.skeleton-text {
+  height: 1.25rem; /* h-5 */
+  margin-bottom: 0.5rem; /* mb-2 */
+  background-color: #d1d5db; /* gray-300 */
+}
+.dark .skeleton-text {
+  background-color: #4b5563; /* gray-600 */
+}
+.skeleton-text-sm {
+  height: 1rem; /* h-4 */
+  background-color: #d1d5db; /* gray-300 */
+}
+.dark .skeleton-text-sm {
+  background-color: #4b5563; /* gray-600 */
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
+.skeleton-card > div > div, .skeleton-image {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+

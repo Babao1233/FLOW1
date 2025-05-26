@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Meta tags will be dynamically updated by JS -->
+  <title>Chi Tiết Sản Phẩm - Yapee</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.7/marked.min.js"></script>
+</head>
+<body class="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300">
+
+  <!-- Toast thông báo -->
+  <div id="toast" class="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg opacity-0 transition-opacity duration-500 z-50" aria-live="polite">
+    <!-- Message will be set by JS -->
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-white dark:bg-gray-800 shadow-sm">
+    <div class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-y-3">
+        <a href="index.html" class="flex items-center space-x-2" aria-label="Yapee Homepage">
+            <svg class="w-8 h-8 text-red-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor"/>
+              <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <h1 class="text-xl font-bold">Yapee</h1>
+        </a>
+        
+        <nav class="hidden md:flex space-x-8 order-2 md:order-none flex-grow md:flex-grow-0 justify-center md:justify-start">
+            <a href="index.html#products" class="font-medium hover:text-red-500 transition">Sản phẩm</a>
+            <a href="index.html#promotions" class="font-medium hover:text-red-500 transition">Khuyến mãi</a>
+            <a href="index.html#testimonials" class="font-medium hover:text-red-500 transition">Đánh giá</a>
+            <a href="index.html#contact" class="font-medium hover:text-red-500 transition">Liên hệ</a>
+        </nav>
+
+        <div class="flex items-center space-x-2 sm:space-x-4 order-1 md:order-none w-full md:w-auto justify-end md:justify-start">
+            <!-- Search Input (optional on PDP, can be removed or kept for consistency) -->
+            <div class="relative flex-grow md:flex-grow-0 max-w-xs md:max-w-none">
+              <input
+                type="text"
+                id="searchInputHeader" 
+                placeholder="Tìm kiếm..."
+                class="w-full px-3 py-1.5 rounded-full border border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                aria-label="Tìm kiếm sản phẩm"
+              />
+              <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            
+            <div id="auth-container" class="flex items-center space-x-2 text-sm">
+              <!-- Default: Login/Register links -->
+              <a id="login-link" href="login.html" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition px-3 py-2 rounded-md">Đăng Nhập</a>
+              <a id="register-link" href="register.html" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition px-3 py-2 rounded-md">Đăng Ký</a>
+              <!-- Logged in: User info and logout -->
+              <div id="user-info" class="hidden items-center space-x-2">
+                <span id="username-display" class="text-gray-700 dark:text-gray-200 px-3 py-2"></span>
+                <a href="account.html" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition px-3 py-2 rounded-md">Tài Khoản</a>
+                <button id="logout-button" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition px-3 py-2 rounded-md">Đăng Xuất</button>
+              </div>
+            </div>
+
+            <button id="darkModeToggle" aria-label="Chuyển đổi chế độ tối/sáng" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 flex-shrink-0">
+              <svg id="lightModeIcon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />
+              </svg>
+              <svg id="darkModeIcon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+              </svg>
+            </button>
+            
+            <div class="relative flex-shrink-0">
+              <button aria-label="Xem giỏ hàng" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 relative">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                </svg>
+                <span id="cartCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                  0
+                </span>
+              </button>
+            </div>
+        </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-8">
+    <div id="productDetailContainer" class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+      <!-- Product Image Gallery -->
+      <div id="productImageGallery" class="space-y-4">
+        <div class="aspect-square bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shadow">
+            <img id="mainProductImage" src="https://placehold.co/600x600/E0E0E0/B0B0B0?text=Loading..." alt="Hình ảnh sản phẩm chính" class="w-full h-full object-contain transition-opacity duration-300 opacity-0">
+        </div>
+        <div id="thumbnailContainer" class="grid grid-cols-4 gap-2 sm:gap-3">
+            <!-- Thumbnails will be injected here -->
+        </div>
+      </div>
+
+      <!-- Product Info -->
+      <div id="productInfo" class="space-y-6">
+        <h1 id="productName" class="text-3xl lg:text-4xl font-bold">Đang tải tên sản phẩm...</h1>
+        
+        <div id="productRatingContainer" class="flex items-center">
+          <!-- Stars will be injected here -->
+          <span id="productRatingValue" class="ml-2 text-gray-600 dark:text-gray-400"></span>
+        </div>
+
+        <div>
+          <span id="productSalePrice" class="text-3xl font-bold text-red-500"></span>
+          <span id="productOriginalPrice" class="text-xl text-gray-500 dark:text-gray-400 line-through ml-3"></span>
+        </div>
+        
+        <div id="productDescription" class="text-gray-700 dark:text-gray-300 leading-relaxed prose dark:prose-invert max-w-none">
+          <p>Đang tải mô tả sản phẩm...</p>
+        </div>
+
+        <!-- Quantity Selector -->
+        <div class="flex items-center space-x-3">
+          <label for="quantity" class="font-semibold">Số lượng:</label>
+          <div class="flex items-center border border-gray-300 dark:border-gray-600 rounded-md">
+            <button id="decreaseQuantity" aria-label="Giảm số lượng" class="px-3 py-2 text-lg hover:bg-gray-100 dark:hover:bg-gray-700 rounded-l-md transition">-</button>
+            <input type="number" id="quantityInput" value="1" min="1" class="w-12 text-center border-none focus:ring-0 bg-transparent dark:text-white" aria-label="Số lượng sản phẩm">
+            <button id="increaseQuantity" aria-label="Tăng số lượng" class="px-3 py-2 text-lg hover:bg-gray-100 dark:hover:bg-gray-700 rounded-r-md transition">+</button>
+          </div>
+        </div>
+
+        <!-- Add to Cart Button -->
+        <button id="addToCartButton" class="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white font-semibold px-8 py-3 rounded-lg shadow-md hover:shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+          Thêm vào Giỏ hàng
+        </button>
+      </div>
+    </div>
+
+    <!-- Related Products Section -->
+    <section id="relatedProductsSection" class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
+      <h2 class="text-2xl font-bold mb-6 text-center">Sản Phẩm Liên Quan</h2>
+      <div id="relatedProductsStore" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Related products will be injected here -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-gray-800 text-white py-12 mt-16">
+    <div class="container mx-auto px-4 text-center">
+      <p>&copy; <span id="currentYearFooter">2024</span> Yapee. Tất cả quyền được bảo lưu.</p>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/main.js"></script> <!-- Added js/main.js -->
+  <script src="js/product-detail.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+

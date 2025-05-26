@@ -1,0 +1,73 @@
+/* Ensure Tailwind base styles are applied */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Skeleton Loader */
+@keyframes skeleton-pulse {
+  0% { background-color: #e5e7eb; } /* gray-200 */
+  50% { background-color: #f3f4f6; } /* gray-100 */
+  100% { background-color: #e5e7eb; } /* gray-200 */
+}
+
+.dark @keyframes skeleton-pulse {
+  0% { background-color: #4b5563; } /* gray-600 */
+  50% { background-color: #374151; } /* gray-700 */
+  100% { background-color: #4b5563; } /* gray-600 */
+}
+
+.skeleton-item {
+  animation: skeleton-pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Scrollbar hide utility */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Additional global styles can be added here */
+.glassmorphism {
+    background: rgba(255, 255, 255, 0.1); /* Light mode subtle white */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.dark .glassmorphism {
+    background: rgba(31, 41, 55, 0.2); /* Dark mode subtle dark gray, e.g., gray-800 with alpha */
+    border: 1px solid rgba(75, 85, 99, 0.18); /* e.g., gray-600 with alpha */
+}
+
+/* Custom scrollbar styles (optional, for better aesthetics) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5); /* gray-400 with opacity */
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(107, 114, 128, 0.7); /* gray-500 with opacity */
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgba(75, 85, 99, 0.5); /* gray-600 with opacity for dark mode */
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(107, 114, 128, 0.7); /* gray-500 with opacity for dark mode */
+}
+

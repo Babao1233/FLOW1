@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Quản lý tài khoản Yapee của bạn. Xem lịch sử đơn hàng và cập nhật thông tin cá nhân.">
+  <title>Tài Khoản Của Tôi - Yapee Vietnam</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    (function() {
+      const storedDarkMode = localStorage.getItem('darkMode');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const darkMode = storedDarkMode ? JSON.parse(storedDarkMode) : prefersDark;
+      if (darkMode) {
+        document.documentElement.classList.add('dark');
+      }
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              inter: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              primary: '#EF4444', // red-500
+              secondary: '#F97316', // orange-500
+            }
+          }
+        }
+      }
+    })();
+  </script>
+</head>
+<body class="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300 flex flex-col font-inter">
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-4 right-4 md:bottom-8 md:right-8 bg-green-500 text-white px-6 py-3 rounded-lg shadow-xl opacity-0 transform translate-y-full transition-all duration-500 z-[100] text-sm" role="alert" style="visibility: hidden;">
+    <!-- Message will be set by JS -->
+  </div>
+
+  <!-- Header -->
+  <header id="main-header" class="sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-sm">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="index.html" class="flex items-center space-x-2 shrink-0" aria-label="Yapee Homepage">
+        <svg class="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor"/>
+          <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Yapee</h1>
+      </a>
+      
+      <nav class="hidden md:flex items-center space-x-5 lg:space-x-7 text-sm font-medium">
+        <a href="index.html#products" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Sản phẩm</a>
+        <a href="index.html#promotions" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Khuyến mãi</a>
+        <a href="index.html#testimonials" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Đánh giá</a>
+        <a href="about.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Giới thiệu</a>
+        <a href="contact.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Liên hệ</a>
+      </nav>
+
+      <div class="flex items-center space-x-3">
+        <button id="darkModeToggle" aria-label="Toggle dark mode" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+            <svg id="theme-toggle-dark-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+        </button>
+        
+        <div id="auth-container" class="flex items-center space-x-2 text-sm">
+          <!-- Default: Login/Register links -->
+          <a id="login-link" href="login.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition px-3 py-2 rounded-md">Đăng Nhập</a>
+          <a id="register-link" href="register.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition px-3 py-2 rounded-md">Đăng Ký</a>
+          <!-- Logged in: User info and logout -->
+          <div id="user-info" class="hidden items-center space-x-2">
+            <span id="username-display" class="text-gray-700 dark:text-gray-200 px-3 py-2"></span>
+            <a href="account.html" class="text-primary dark:text-primary font-semibold transition px-3 py-2 rounded-md">Tài Khoản</a> <!-- Active state for account page -->
+            <button id="logout-button" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition px-3 py-2 rounded-md">Đăng Xuất</button>
+          </div>
+        </div>
+
+        <div class="relative">
+          <a href="cart.html" aria-label="Giỏ hàng" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 relative transition-colors">
+            <i class="fas fa-shopping-cart w-5 h-5 text-gray-600 dark:text-gray-300"></i>
+            <span id="cart-count-badge" class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full" style="display: none;">0</span>
+          </a>
+        </div>
+        <button id="mobileMenuButton" class="md:hidden p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="Open menu">
+            <i class="fas fa-bars w-5 h-5 text-gray-600 dark:text-gray-300"></i>
+        </button>
+      </div>
+    </div>
+     <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden absolute top-full left-0 right-0 bg-white dark:bg-gray-800 shadow-lg py-2 z-40">
+        <a href="index.html#products" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Sản phẩm</a>
+        <a href="index.html#promotions" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Khuyến mãi</a>
+        <a href="index.html#testimonials" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Đánh giá</a>
+        <a href="about.html" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Giới thiệu</a>
+        <a href="contact.html" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Liên hệ</a>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-8 md:py-12 flex-grow">
+    <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-8 text-center">Tài Khoản Của Tôi</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Sidebar Navigation -->
+      <aside class="md:col-span-1">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+          <h3 class="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200">Điều Hướng</h3>
+          <nav class="space-y-2">
+            <a href="#profile" class="flex items-center space-x-3 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary p-2 rounded-md hover:bg-red-50 dark:hover:bg-gray-700 transition-all">
+              <i class="fas fa-user-edit w-5 h-5"></i>
+              <span>Thông Tin Cá Nhân</span>
+            </a>
+            <a href="#orders" class="flex items-center space-x-3 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary p-2 rounded-md hover:bg-red-50 dark:hover:bg-gray-700 transition-all">
+              <i class="fas fa-box w-5 h-5"></i>
+              <span>Lịch Sử Đơn Hàng</span>
+            </a>
+            <a href="#address" class="flex items-center space-x-3 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary p-2 rounded-md hover:bg-red-50 dark:hover:bg-gray-700 transition-all">
+              <i class="fas fa-map-marker-alt w-5 h-5"></i>
+              <span>Địa Chỉ</span>
+            </a>
+            <a href="#settings" class="flex items-center space-x-3 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary p-2 rounded-md hover:bg-red-50 dark:hover:bg-gray-700 transition-all">
+              <i class="fas fa-cog w-5 h-5"></i>
+              <span>Cài Đặt</span>
+            </a>
+            <button class="w-full flex items-center space-x-3 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary p-2 rounded-md hover:bg-red-50 dark:hover:bg-gray-700 transition-all">
+              <i class="fas fa-sign-out-alt w-5 h-5"></i>
+              <span>Đăng Xuất</span>
+            </button>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <section class="md:col-span-2 space-y-8">
+        <!-- Profile Section -->
+        <div id="profile" class="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-lg shadow-lg">
+          <h3 class="text-2xl font-semibold mb-6 text-gray-700 dark:text-gray-200">Thông Tin Cá Nhân</h3>
+          <form class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Tên đăng nhập</label>
+              <p id="userName" class="w-full px-3 py-2 text-gray-700 dark:text-gray-200"></p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Email</label>
+              <p id="userEmail" class="w-full px-3 py-2 text-gray-700 dark:text-gray-200"></p>
+            </div>
+            <!-- Original form fields can be kept for updating info, but pre-filling them needs more logic -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="firstName" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Tên</label>
+                <input type="text" id="firstName" placeholder="Văn" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white">
+              </div>
+              <div>
+                <label for="lastName" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Họ</label>
+                <input type="text" id="lastName" placeholder="Nguyễn" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white">
+              </div>
+            </div>
+            <div>
+              <label for="email_form_input" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Email (để thay đổi)</label>
+              <input type="email" id="email_form_input" placeholder="nguyenvana@example.com" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white">
+            </div>
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Số điện thoại</label>
+              <input type="tel" id="phone" placeholder="090xxxxxxx" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white">
+            </div>
+            <div class="pt-2">
+              <button type="submit" class="bg-primary hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-md shadow-sm transition-colors">Lưu Thay Đổi</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Order History Section -->
+        <div id="orders" class="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-lg shadow-lg">
+          <h3 class="text-2xl font-semibold mb-6 text-gray-700 dark:text-gray-200">Lịch Sử Đơn Hàng</h3>
+          <div class="space-y-4">
+            <!-- Placeholder for an order item -->
+            <div class="border border-gray-200 dark:border-gray-700 p-4 rounded-md hover:shadow-md transition-shadow">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="font-semibold text-gray-700 dark:text-gray-200">Đơn hàng #12345</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Ngày đặt: 01/01/2024</p>
+                </div>
+                <span class="text-sm font-medium text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900 px-2 py-1 rounded-full">Đã giao</span>
+              </div>
+              <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Tổng cộng: 1.500.000 VNĐ</p>
+              <a href="#" class="text-sm text-primary hover:underline mt-2 inline-block">Xem chi tiết</a>
+            </div>
+            <div class="border border-gray-200 dark:border-gray-700 p-4 rounded-md hover:shadow-md transition-shadow">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="font-semibold text-gray-700 dark:text-gray-200">Đơn hàng #12300</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Ngày đặt: 15/12/2023</p>
+                </div>
+                <span class="text-sm font-medium text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900 px-2 py-1 rounded-full">Đang xử lý</span>
+              </div>
+              <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Tổng cộng: 890.000 VNĐ</p>
+              <a href="#" class="text-sm text-primary hover:underline mt-2 inline-block">Xem chi tiết</a>
+            </div>
+             <!-- End placeholder -->
+          </div>
+          <p class="text-center text-gray-500 dark:text-gray-400 mt-6 text-sm">Bạn chưa có đơn hàng nào.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 dark:bg-gray-950 text-gray-300 pt-16 pb-8">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        <div>
+          <h4 class="text-xl font-bold text-white mb-4">Yapee</h4>
+          <p class="text-gray-400 mb-4 text-sm">Nâng tầm cuộc sống hiện đại với những thiết bị thông minh hàng đầu.</p>
+          <div class="flex space-x-4">
+            <a href="#" aria-label="Facebook" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f fa-lg"></i></a>
+            <a href="#" aria-label="Instagram" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram fa-lg"></i></a>
+            <a href="#" aria-label="Twitter" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter fa-lg"></i></a>
+            <a href="#" aria-label="Youtube" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube fa-lg"></i></a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold text-white mb-4">Liên Kết Nhanh</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="index.html#products" class="hover:text-white transition">Sản phẩm</a></li>
+            <li><a href="index.html#promotions" class="hover:text-white transition">Khuyến mãi</a></li>
+            <li><a href="terms.html#warranty" class="hover:text-white transition">Chính sách bảo hành</a></li>
+            <li><a href="terms.html" class="hover:text-white transition">Điều khoản dịch vụ</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold text-white mb-4">Thông Tin</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="about.html" class="hover:text-white transition">Về Yapee</a></li>
+            <li><a href="contact.html" class="hover:text-white transition">Liên hệ</a></li>
+            <li><a href="terms.html#privacy" class="hover:text-white transition">Chính sách bảo mật</a></li>
+            <li><a href="contact.html#faq" class="hover:text-white transition">FAQs</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold text-white mb-4">Nhận Tin Mới</h4>
+          <p class="text-gray-400 mb-4 text-sm">Đăng ký để nhận ưu đãi đặc biệt và cập nhật sản phẩm mới nhất.</p>
+          <form class="flex">
+            <input 
+              type="email" 
+              placeholder="Email của bạn" 
+              aria-label="Email for newsletter"
+              class="px-3 py-2 w-full rounded-l-md focus:outline-none text-gray-900 text-sm border-0 focus:ring-2 focus:ring-primary"
+            />
+            <button type="submit" class="bg-primary hover:bg-red-600 text-white px-4 py-2 rounded-r-md font-semibold text-sm transition-colors">
+              Đăng ký
+            </button>
+          </form>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
+        <p>&copy; <span id="currentYear"></span> Yapee Vietnam. Tất cả quyền được bảo lưu.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/account-page.js" defer></script>
+</body>
+</html>
+
+

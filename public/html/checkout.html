@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hoàn tất đơn hàng Yapee của bạn. Nhập thông tin giao hàng và chọn phương thức thanh toán an toàn, tiện lợi.">
+  <title>Thanh Toán - Yapee Vietnam</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.7/marked.min.js" defer></script>
+  <link rel="icon" href="https://placehold.co/32x32/ef4444/ffffff?text=J" type="image/png">
+  <script>
+    // Initialize dark mode based on localStorage before full page load to prevent flicker
+    (function() {
+      const storedDarkMode = localStorage.getItem('darkMode');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const darkMode = storedDarkMode ? JSON.parse(storedDarkMode) : prefersDark;
+      if (darkMode) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+<body class="min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300 flex flex-col font-inter">
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-4 right-4 md:bottom-8 md:right-8 bg-green-500 text-white px-6 py-3 rounded-lg shadow-xl opacity-0 transform translate-y-full transition-all duration-500 z-[100] text-sm" role="alert" style="display: none;">
+    <!-- Message will be set by JS -->
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="index.html" class="flex items-center space-x-2 shrink-0" aria-label="Yapee Homepage">
+        <svg class="w-8 h-8 text-red-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor"/>
+          <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Yapee</h1>
+      </a>
+      
+      <nav class="hidden md:flex space-x-6 lg:space-x-8 text-sm font-medium">
+        <a href="index.html#products" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition-colors">Sản phẩm</a>
+        <a href="index.html#promotions" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition-colors">Khuyến mãi</a>
+        <a href="index.html#testimonials" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition-colors">Đánh giá</a>
+        <a href="index.html#contact" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition-colors">Liên hệ</a>
+      </nav>
+
+      <div class="flex items-center space-x-3 sm:space-x-4">
+        <button id="globalDarkModeToggle" aria-label="Toggle dark mode" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+          <!-- SVG icon will be set by js/main.js -->
+        </button>
+        
+        <a href="cart.html" class="relative p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="View shopping cart">
+          <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+          </svg>
+          <span id="cartItemCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
+        </a>
+         <button id="mobileMenuButton" class="md:hidden p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700" aria-label="Open menu" aria-expanded="false">
+            <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+        </button>
+      </div>
+    </div>
+     <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+        <nav class="flex flex-col space-y-2 p-4 text-sm font-medium">
+            <a href="index.html#products" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 px-3 py-2 rounded-md">Sản phẩm</a>
+            <a href="index.html#promotions" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 px-3 py-2 rounded-md">Khuyến mãi</a>
+            <a href="index.html#testimonials" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 px-3 py-2 rounded-md">Đánh giá</a>
+            <a href="index.html#contact" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 px-3 py-2 rounded-md">Liên hệ</a>
+        </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-8 text-center">Thanh Toán Đơn Hàng</h1>
+    
+    <form id="checkoutForm" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Shipping Details Section -->
+      <section class="lg:col-span-2 bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 md:p-8">
+        <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">Thông tin giao hàng</h2>
+        <div class="space-y-5">
+          <div>
+            <label for="fullName" class="form-label">Họ và tên người nhận</label>
+            <input type="text" id="fullName" name="fullName" class="form-input" placeholder="Nguyễn Văn A" required>
+          </div>
+          <div>
+            <label for="phoneNumber" class="form-label">Số điện thoại</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" class="form-input" placeholder="09xxxxxxxx" required>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label for="province" class="form-label">Tỉnh/Thành phố</label>
+              <input type="text" id="province" name="province" class="form-input" placeholder="TP. Hồ Chí Minh" required>
+            </div>
+            <div>
+              <label for="district" class="form-label">Quận/Huyện</label>
+              <input type="text" id="district" name="district" class="form-input" placeholder="Quận 1" required>
+            </div>
+          </div>
+
+          <div>
+            <label for="ward" class="form-label">Phường/Xã</label>
+            <input type="text" id="ward" name="ward" class="form-input" placeholder="Phường Bến Nghé" required>
+          </div>
+          <div>
+            <label for="addressDetail" class="form-label">Địa chỉ chi tiết (Số nhà, tên đường)</label>
+            <textarea id="addressDetail" name="addressDetail" rows="3" class="form-textarea" placeholder="123 Đường Đồng Khởi" required></textarea>
+          </div>
+           <div>
+            <label for="notes" class="form-label">Ghi chú (Tùy chọn)</label>
+            <textarea id="notes" name="notes" rows="2" class="form-textarea" placeholder="Giao hàng giờ hành chính..."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- Order Summary & Payment Section -->
+      <section class="lg:col-span-1 space-y-8">
+        <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 md:p-8">
+            <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">Tóm tắt đơn hàng</h2>
+            <div class="space-y-3 text-sm">
+                <!-- Example item, should be populated by JS -->
+                <div class="flex justify-between items-center text-gray-600 dark:text-gray-300">
+                    <span>Sản phẩm ABC x 1</span>
+                    <span>$99.00</span>
+                </div>
+                <div class="flex justify-between items-center text-gray-600 dark:text-gray-300">
+                    <span>Sản phẩm XYZ x 2</span>
+                    <span>$38.00</span>
+                </div>
+                <hr class="border-gray-200 dark:border-gray-700 my-3">
+                <div class="flex justify-between items-center font-medium text-gray-700 dark:text-gray-200">
+                    <span>Tạm tính</span>
+                    <span>$137.00</span>
+                </div>
+                <div class="flex justify-between items-center font-medium text-gray-700 dark:text-gray-200">
+                    <span>Phí vận chuyển</span>
+                    <span>Miễn phí</span>
+                </div>
+                <hr class="border-gray-200 dark:border-gray-700 my-3">
+                <div class="flex justify-between items-center text-lg font-bold text-gray-800 dark:text-white">
+                    <span>Tổng cộng</span>
+                    <span class="text-red-500">$137.00</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 md:p-8">
+          <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">Phương thức thanh toán</h2>
+          <div class="space-y-4">
+            <label class="form-radio-label border-gray-300 dark:border-gray-600">
+              <input type="radio" name="paymentMethod" value="cod" class="form-radio" checked>
+              <div class="flex-grow">
+                <span class="font-medium">Thanh toán khi nhận hàng (COD)</span>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Trả tiền mặt khi nhận được hàng.</p>
+              </div>
+            </label>
+            <label class="form-radio-label border-gray-300 dark:border-gray-600">
+              <input type="radio" name="paymentMethod" value="bank_transfer" class="form-radio">
+               <div class="flex-grow">
+                <span class="font-medium">Chuyển khoản ngân hàng</span>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Thông tin chuyển khoản sẽ được cung cấp sau khi đặt hàng.</p>
+              </div>
+            </label>
+            <label class="form-radio-label border-gray-300 dark:border-gray-600">
+              <input type="radio" name="paymentMethod" value="card" class="form-radio">
+               <div class="flex-grow">
+                <span class="font-medium">Thẻ Tín dụng/Ghi nợ</span>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Thanh toán an toàn qua cổng thanh toán (Visa, Mastercard, JCB).</p>
+              </div>
+            </label>
+          </div>
+        </div>
+        
+        <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3.5 px-6 rounded-lg text-center transition-colors duration-300 text-base shadow-md hover:shadow-lg">
+          Hoàn Tất Đơn Hàng
+        </button>
+      </section>
+    </form>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-400 dark:bg-gray-900 dark:text-gray-500 py-12 mt-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8 text-sm">
+        <div>
+          <h4 class="text-lg font-semibold text-white dark:text-gray-200 mb-4">Yapee Vietnam</h4>
+          <p class="mb-4">Nâng tầm cuộc sống hiện đại với thiết bị thông minh. Chất lượng và dịch vụ hàng đầu.</p>
+           <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white dark:hover:text-red-400 transition-colors" aria-label="Facebook"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" /></svg></a>
+            <a href="#" class="text-gray-400 hover:text-white dark:hover:text-red-400 transition-colors" aria-label="Instagram"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.85-.069zM12 0C8.74 0 8.333.014 7.053.06 2.05 0.222 1.116 1.4 1.03 4.384.984 6.064.98 6.623.98 12s0 5.936.004 7.616C1.07 22.6 2.005 23.778 7.008 23.94c1.281.046 1.689.06 4.949.06 3.26 0 3.668-.014 4.949-.06 4.99-0.162 5.929-1.34 5.975-4.324.004-1.68.004-2.239.004-7.616s0-5.936-.004-7.616c-0.046-2.984-1.07-4.162-5.975-4.324-1.281-.045-1.689-.06-4.949-.06z" /><path d="M12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8z" /><circle cx="18.406" cy="5.594" r="1.44" /></svg></a>
+            <a href="#" class="text-gray-400 hover:text-white dark:hover:text-red-400 transition-colors" aria-label="Twitter"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" /></svg></a>
+          </div>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold text-white dark:text-gray-200 mb-4">Liên Kết Nhanh</h4>
+          <ul class="space-y-2">
+            <li><a href="index.html#products" class="hover:text-red-400 transition-colors">Sản phẩm</a></li>
+            <li><a href="index.html#promotions" class="hover:text-red-400 transition-colors">Khuyến mãi</a></li>
+            <li><a href="#" class="hover:text-red-400 transition-colors">Chính sách bảo mật</a></li>
+            <li><a href="#" class="hover:text-red-400 transition-colors">Điều khoản dịch vụ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold text-white dark:text-gray-200 mb-4">Hỗ Trợ Khách Hàng</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="hover:text-red-400 transition-colors">Trung tâm hỗ trợ</a></li>
+            <li><a href="#" class="hover:text-red-400 transition-colors">FAQ</a></li>
+            <li><a href="index.html#contact" class="hover:text-red-400 transition-colors">Liên hệ</a></li>
+          </ul>
+        </div>
+         <div>
+          <h4 class="text-lg font-semibold text-white dark:text-gray-200 mb-4">Nhận Tin Mới</h4>
+          <p class="mb-3">Đăng ký để nhận ưu đãi đặc biệt và cập nhật sản phẩm mới nhất.</p>
+          <form class="flex">
+            <input type="email" placeholder="Email của bạn" class="form-input py-2.5 text-sm w-full rounded-l-md focus:outline-none text-gray-900 dark:bg-gray-700 dark:border-gray-600" required>
+            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-r-md text-sm font-semibold transition-colors">Đăng ký</button>
+          </form>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 dark:border-gray-600 pt-8 text-center text-xs">
+        <p>&copy; <span id="currentYear"></span> Yapee Vietnam. Phát triển bởi AI. Tất cả quyền được bảo lưu.</p>
+      </div>
+    </div>
+  </footer>
+  
+  <script src="js/main.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>
+
+
+
+

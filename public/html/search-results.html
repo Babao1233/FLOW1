@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Yapee Vietnam - Nâng tầm cuộc sống hiện đại với các thiết bị gia dụng thông minh, quạt, máy lọc không khí, máy sưởi. Mua sắm trực tuyến ngay!">
+  <meta property="og:title" content="Yapee Vietnam - Thiết Bị Gia Dụng Thông Minh">
+  <meta property="og:description" content="Khám phá bộ sưu tập thiết bị gia đình thông minh, quạt, máy lọc không khí với giá ưu đãi tại Yapee Vietnam.">
+  <meta property="og:image" content="https://placehold.co/1200x630?text=Yapee+Hero">
+  <meta property="og:url" content="[YOUR_WEBSITE_URL_HERE]">
+  <meta property="og:type" content="website">
+  <title>Kết quả tìm kiếm - Yapee Vietnam</title> <!-- Updated Title -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    (function() {
+      const storedDarkMode = localStorage.getItem('darkMode');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const darkMode = storedDarkMode ? JSON.parse(storedDarkMode) : prefersDark;
+      if (darkMode) {
+        document.documentElement.classList.add('dark');
+      }
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              inter: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              primary: '#EF4444', // red-500
+              secondary: '#F97316', // orange-500
+            }
+          }
+        }
+      }
+    })();
+  </script>
+</head>
+<body class="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300 flex flex-col font-inter">
+
+  <!-- Toast Notification (from index.html) -->
+  <div id="toast" class="fixed bottom-4 right-4 md:bottom-8 md:right-8 bg-green-500 text-white px-6 py-3 rounded-lg shadow-xl opacity-0 transform translate-y-full transition-all duration-500 z-[100] text-sm" role="alert" style="visibility: hidden;">
+    Đã thêm vào giỏ hàng!
+  </div>
+
+  <!-- Header (from index.html, with auth-container) -->
+  <header id="main-header" class="sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-sm">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="index.html" class="flex items-center space-x-2 shrink-0" aria-label="Yapee Homepage">
+        <svg class="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor"/>
+          <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Yapee</h1>
+      </a>
+      
+      <nav class="hidden md:flex items-center space-x-5 lg:space-x-7 text-sm font-medium">
+        <a href="index.html#products" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Sản phẩm</a>
+        <a href="index.html#promotions" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Khuyến mãi</a>
+        <a href="index.html#testimonials" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Đánh giá</a>
+        <a href="about.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Giới thiệu</a>
+        <a href="contact.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Liên hệ</a>
+      </nav>
+
+      <div class="flex items-center space-x-3">
+        <button id="darkModeToggle" aria-label="Toggle dark mode" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+          <svg id="theme-toggle-dark-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+          <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+        </button>
+        
+        <div id="auth-container" class="flex items-center space-x-2 text-sm">
+          <a id="login-link" href="login.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition px-3 py-2 rounded-md">Đăng Nhập</a>
+          <a id="register-link" href="register.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition px-3 py-2 rounded-md">Đăng Ký</a>
+          <div id="user-info" class="hidden items-center space-x-2">
+            <span id="username-display" class="text-gray-700 dark:text-gray-200 px-3 py-2"></span>
+            <a href="account.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition px-3 py-2 rounded-md">Tài Khoản</a>
+            <button id="logout-button" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition px-3 py-2 rounded-md">Đăng Xuất</button>
+          </div>
+        </div>
+
+        <div class="relative">
+          <a href="cart.html" aria-label="Giỏ hàng" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 relative transition-colors">
+            <i class="fas fa-shopping-cart w-5 h-5 text-gray-600 dark:text-gray-300"></i>
+            <span id="cart-count-badge" class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full" style="display: none;">0</span>
+          </a>
+        </div>
+        <button id="mobileMenuButton" class="md:hidden p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="Open menu">
+            <i class="fas fa-bars w-5 h-5 text-gray-600 dark:text-gray-300"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Menu (from index.html) -->
+    <div id="mobileMenu" class="hidden md:hidden absolute top-full left-0 right-0 bg-white dark:bg-gray-800 shadow-lg py-2 z-40">
+        <a href="index.html#products" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Sản phẩm</a>
+        <a href="index.html#promotions" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Khuyến mãi</a>
+        <a href="index.html#testimonials" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Đánh giá</a>
+        <a href="about.html" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Giới thiệu</a>
+        <a href="contact.html" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Liên hệ</a>
+    </div>
+  </header>
+
+  <!-- Search Form (original from search-results.html, adjusted for new theme) -->
+  <div class="container mx-auto px-4 py-6">
+    <form id="search-form" class="flex flex-col md:flex-row gap-4">
+      <div class="flex-grow">
+        <input 
+          type="text" 
+          id="search-input" 
+          placeholder="Tìm kiếm sản phẩm..." 
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+        >
+      </div>
+      <div class="md:w-1/4">
+        <select 
+          id="category-filter" 
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
+        >
+          <option value="">Tất cả danh mục</option>
+          <option value="air-purifier">Máy lọc không khí</option>
+          <option value="vacuum">Robot hút bụi</option>
+          <option value="lighting">Đèn thông minh</option>
+          <option value="security">Camera an ninh</option>
+        </select>
+      </div>
+      <button 
+        type="submit" 
+        class="bg-primary hover:bg-red-600 text-white font-semibold py-2.5 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 md:w-auto"
+      >
+        Tìm kiếm
+      </button>
+    </form>
+  </div>
+
+  <!-- Search Results -->
+  <main class="container mx-auto px-4 py-6 flex-grow"> <!-- Added flex-grow -->
+    <div class="mb-6">
+      <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-2">Kết Quả Tìm Kiếm</h1> <!-- Adjusted heading size -->
+      <p id="search-summary" class="text-gray-600 dark:text-gray-300">Đang hiển thị kết quả cho "<span id="search-term">từ khóa</span>"</p>
+    </div>
+
+    <div id="search-results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8"> <!-- Matched gap from index.html -->
+      <!-- Kết quả tìm kiếm sẽ được thêm vào đây bằng JavaScript -->
+    </div>
+
+    <div id="no-results" class="hidden py-12 text-center">
+      <i class="fas fa-search text-gray-400 dark:text-gray-500 text-5xl mb-4"></i> <!-- Matched icon color -->
+      <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-2">Không Tìm Thấy Kết Quả</h2>
+      <p class="text-gray-600 dark:text-gray-300">Vui lòng thử lại với từ khóa hoặc danh mục khác.</p>
+    </div>
+  </main>
+
+  <!-- Footer (from index.html) -->
+  <footer class="bg-gray-800 dark:bg-gray-950 text-gray-300 pt-16 pb-8">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        <div>
+          <h4 class="text-xl font-bold text-white mb-4">Yapee</h4>
+          <p class="text-gray-400 mb-4 text-sm">Nâng tầm cuộc sống hiện đại với những thiết bị thông minh hàng đầu.</p>
+          <div class="flex space-x-4">
+            <a href="#" aria-label="Facebook" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f fa-lg"></i></a>
+            <a href="#" aria-label="Instagram" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram fa-lg"></i></a>
+            <a href="#" aria-label="Twitter" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter fa-lg"></i></a>
+            <a href="#" aria-label="Youtube" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube fa-lg"></i></a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold text-white mb-4">Liên Kết Nhanh</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="index.html#products" class="hover:text-white transition">Sản phẩm</a></li>
+            <li><a href="index.html#promotions" class="hover:text-white transition">Khuyến mãi</a></li>
+            <li><a href="terms.html#warranty" class="hover:text-white transition">Chính sách bảo hành</a></li>
+            <li><a href="terms.html" class="hover:text-white transition">Điều khoản dịch vụ</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold text-white mb-4">Thông Tin</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="about.html" class="hover:text-white transition">Về Yapee</a></li>
+            <li><a href="contact.html" class="hover:text-white transition">Liên hệ</a></li>
+            <li><a href="terms.html#privacy" class="hover:text-white transition">Chính sách bảo mật</a></li>
+            <li><a href="contact.html#faq" class="hover:text-white transition">FAQs</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold text-white mb-4">Nhận Tin Mới</h4>
+          <p class="text-gray-400 mb-4 text-sm">Đăng ký để nhận ưu đãi đặc biệt và cập nhật sản phẩm mới nhất.</p>
+          <form class="flex">
+            <input 
+              type="email" 
+              placeholder="Email của bạn" 
+              aria-label="Email for newsletter"
+              class="px-3 py-2 w-full rounded-l-md focus:outline-none text-gray-900 text-sm border-0 focus:ring-2 focus:ring-primary"
+            />
+            <button type="submit" class="bg-primary hover:bg-red-600 text-white px-4 py-2 rounded-r-md font-semibold text-sm transition-colors">
+              Đăng ký
+            </button>
+          </form>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
+        <p>&copy; <span id="currentYear"></span> Yapee Vietnam. Tất cả quyền được bảo lưu.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script> <!-- Added js/main.js -->
+  <script>
+    // Original inline script for search functionality (mobile menu toggle removed as it's in main.js)
+    // Lấy tham số từ URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchQuery = urlParams.get('search') || '';
+    const categoryFilter = urlParams.get('category') || '';
+
+    // Điền các giá trị vào form
+    document.getElementById('search-input').value = searchQuery;
+    document.getElementById('category-filter').value = categoryFilter;
+    document.getElementById('search-term').textContent = searchQuery || 'tất cả sản phẩm';
+
+    // Xử lý form tìm kiếm
+    document.getElementById('search-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const search = document.getElementById('search-input').value;
+      const category = document.getElementById('category-filter').value;
+      
+      // Chuyển hướng với tham số tìm kiếm
+      window.location.href = `search-results.html?search=${encodeURIComponent(search)}&category=${encodeURIComponent(category)}`;
+    });
+
+    /**
+     * Lấy dữ liệu sản phẩm từ API
+     */
+    async function fetchProducts() {
+      try {
+        const search = urlParams.get('search') || '';
+        const category = urlParams.get('category') || '';
+        
+        let apiUrl = '/api/products';
+        const params = [];
+        
+        if (search) params.push(`search=${encodeURIComponent(search)}`);
+        if (category) params.push(`category=${encodeURIComponent(category)}`);
+        
+        if (params.length > 0) {
+          apiUrl += '?' + params.join('&');
+        }
+        
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+          throw new Error('Không thể lấy dữ liệu sản phẩm');
+        }
+        
+        const products = await response.json();
+        return products;
+      } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu sản phẩm:', error);
+        return [];
+      }
+    }
+
+    /**
+     * Hiển thị sản phẩm lên trang
+     */
+    function displayProducts(products) {
+      const resultsContainer = document.getElementById('search-results');
+      const noResultsContainer = document.getElementById('no-results');
+      
+      // Xóa nội dung hiện tại
+      resultsContainer.innerHTML = '';
+      
+      if (products.length === 0) {
+        // Hiển thị thông báo không có kết quả
+        noResultsContainer.classList.remove('hidden');
+        return;
+      }
+      
+      // Ẩn thông báo không có kết quả
+      noResultsContainer.classList.add('hidden');
+      
+      // Hiển thị các sản phẩm
+      products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1';
+        
+        // Format giá tiền
+        const formatter = new Intl.NumberFormat('vi-VN', {
+          style: 'currency',
+          currency: 'VND'
+        });
+        
+        const price = formatter.format(product.price);
+        const salePrice = formatter.format(product.saleprice);
+        
+        productCard.innerHTML = `
+          <a href="product-detail.html?id=${product.id}">
+            <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
+            <div class="p-4">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">${product.name}</h3>
+              <div class="flex items-center mb-2">
+                <div class="flex text-yellow-400">
+                  ${getStarRating(product.rating)}
+                </div>
+                <span class="text-gray-600 dark:text-gray-400 text-sm ml-1">(${product.rating})</span>
+              </div>
+              <div class="flex items-center">
+                <span class="text-lg font-bold text-blue-600 dark:text-blue-400">${salePrice}</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 line-through ml-2">${price}</span>
+              </div>
+              <button 
+                class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-300 add-to-cart"
+                data-id="${product.id}"
+                data-name="${product.name}"
+                data-price="${product.saleprice}"
+                data-image="${product.image}"
+              >
+                Thêm vào giỏ
+              </button>
+            </div>
+          </a>
+        `;
+        
+        resultsContainer.appendChild(productCard);
+      });
+      
+      // Cập nhật sự kiện thêm vào giỏ hàng
+      document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          addToCart(this.dataset);
+        });
+      });
+    }
+
+    /**
+     * Tạo hiển thị đánh giá sao
+     */
+    function getStarRating(rating) {
+      const fullStars = Math.floor(rating);
+      const halfStar = rating % 1 >= 0.5;
+      const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+      
+      let stars = '';
+      
+      // Full stars
+      for (let i = 0; i < fullStars; i++) {
+        stars += '<i class="fas fa-star"></i>';
+      }
+      
+      // Half star
+      if (halfStar) {
+        stars += '<i class="fas fa-star-half-alt"></i>';
+      }
+      
+      // Empty stars
+      for (let i = 0; i < emptyStars; i++) {
+        stars += '<i class="far fa-star"></i>';
+      }
+      
+      return stars;
+    }
+
+    /**
+     * Thêm sản phẩm vào giỏ hàng
+     */
+    function addToCart(product) {
+      // Lấy giỏ hàng hiện tại từ localStorage
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      
+      // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+      const existingProductIndex = cart.findIndex(item => item.id === product.id);
+      
+      if (existingProductIndex > -1) {
+        // Nếu sản phẩm đã có, tăng số lượng
+        cart[existingProductIndex].quantity += 1;
+      } else {
+        // Nếu sản phẩm chưa có, thêm vào giỏ hàng
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: parseFloat(product.price),
+          image: product.image,
+          quantity: 1
+        });
+      }
+      
+      // Lưu giỏ hàng vào localStorage
+      localStorage.setItem('cart', JSON.stringify(cart));
+      
+      // Cập nhật số lượng sản phẩm trong giỏ hàng
+      updateCartCount();
+      
+      // Hiển thị thông báo
+      alert('Đã thêm sản phẩm vào giỏ hàng!');
+    }
+
+    /**
+     * Cập nhật số lượng sản phẩm trong giỏ hàng
+     */
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+      document.getElementById('cart-count').textContent = totalItems;
+    }
+
+    // Khởi tạo trang
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Cập nhật số lượng sản phẩm trong giỏ hàng
+      updateCartCount();
+      
+      // Lấy và hiển thị sản phẩm
+      const products = await fetchProducts();
+      displayProducts(products);
+    });
+  </script>
+</body>
+</html>
+
+
+

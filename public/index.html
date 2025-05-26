@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Yapee - Nâng Tầm Cuộc Sống Hiện Đại. Khám phá bộ sưu tập thiết bị gia đình thông minh, quạt, máy sưởi, máy lọc không khí.">
+  <meta property="og:title" content="Yapee Vietnam">
+  <meta property="og:description" content="Nâng Tầm Cuộc Sống Hiện Đại với các sản phẩm gia dụng thông minh.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" /> 
+  <title>Yapee Vietnam</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script>
+    // Initialize darkMode from localStorage for Tailwind
+    // This script runs before React to prevent FOUC for dark mode
+    (function() {
+      const storedDarkMode = localStorage.getItem('darkMode');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      // If storedDarkMode is explicitly "true" or "false", use it. Otherwise, use prefersDark.
+      const darkMode = storedDarkMode !== null ? JSON.parse(storedDarkMode) : prefersDark;
+      if (darkMode) {
+        document.documentElement.classList.add('dark');
+      }
+      // Tailwind config must be set for 'dark' class to work
+      window.tailwind = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              inter: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              primary: '#EF4444', // red-500
+              secondary: '#F97316', // orange-500
+            }
+          }
+        }
+      };
+    })();
+  </script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+  
+  <!-- Libraries for Markdown (if needed in future, included per instruction) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.7/marked.min.js"></script>
+</body>
+</html>
+

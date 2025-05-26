@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Giỏ hàng của bạn tại Yapee Việt Nam. Kiểm tra và hoàn tất đơn hàng thiết bị gia dụng thông minh.">
+  <title>Giỏ Hàng - Yapee Vietnam</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.7/marked.min.js" defer></script>
+  <link rel="icon" href="https://placehold.co/32x32/ef4444/ffffff?text=Y" type="image/png">
+  <script>
+    // Initialize dark mode based on localStorage before full page load to prevent flicker
+    (function() {
+      const storedDarkMode = localStorage.getItem('darkMode');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const darkMode = storedDarkMode ? JSON.parse(storedDarkMode) : prefersDark;
+      if (darkMode) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+<body class="min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300 flex flex-col font-inter">
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-4 right-4 md:bottom-8 md:right-8 bg-green-500 text-white px-6 py-3 rounded-lg shadow-xl opacity-0 transform translate-y-full transition-all duration-500 z-[100] text-sm" role="alert" style="display: none;">
+    <!-- Message will be set by JS -->
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="index.html" class="flex items-center space-x-2 shrink-0" aria-label="Yapee Homepage">
+        <svg class="w-8 h-8 text-red-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor"/>
+          <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Yapee</h1>
+      </a>
+      
+      <nav class="hidden md:flex space-x-6 lg:space-x-8 text-sm font-medium">
+        <a href="index.html#products" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition-colors">Sản phẩm</a>
+        <a href="index.html#promotions" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition-colors">Khuyến mãi</a>
+        <a href="index.html#testimonials" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition-colors">Đánh giá</a>
+        <a href="index.html#contact" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition-colors">Liên hệ</a>
+      </nav>
+
+      <div class="flex items-center space-x-3 sm:space-x-4">
+        <div id="auth-container" class="flex items-center space-x-2 text-sm">
+          <!-- Default: Login/Register links -->
+          <a id="login-link" href="login.html" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition px-3 py-2 rounded-md">Đăng Nhập</a>
+          <a id="register-link" href="register.html" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition px-3 py-2 rounded-md">Đăng Ký</a>
+          <!-- Logged in: User info and logout -->
+          <div id="user-info" class="hidden items-center space-x-2">
+            <span id="username-display" class="text-gray-700 dark:text-gray-200 px-3 py-2"></span>
+            <a href="account.html" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition px-3 py-2 rounded-md">Tài Khoản</a>
+            <button id="logout-button" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition px-3 py-2 rounded-md">Đăng Xuất</button>
+          </div>
+        </div>
+        
+        <button id="globalDarkModeToggle" aria-label="Toggle dark mode" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+          <!-- SVG icon will be set by js/main.js -->
+        </button>
+        
+        <a href="cart.html" class="relative p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="View shopping cart">
+          <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+          </svg>
+          <span id="cartItemCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
+        </a>
+        <button id="mobileMenuButton" class="md:hidden p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700" aria-label="Open menu" aria-expanded="false">
+            <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+        <nav class="flex flex-col space-y-2 p-4 text-sm font-medium">
+            <a href="index.html#products" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 px-3 py-2 rounded-md">Sản phẩm</a>
+            <a href="index.html#promotions" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 px-3 py-2 rounded-md">Khuyến mãi</a>
+            <a href="index.html#testimonials" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 px-3 py-2 rounded-md">Đánh giá</a>
+            <a href="index.html#contact" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 px-3 py-2 rounded-md">Liên hệ</a>
+        </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-4 py-8">
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 md:p-8">
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-8 text-center">Giỏ Hàng Của Bạn</h1>
+      
+      <!-- Cart Items Section -->
+      <div id="cartItemsContainer" class="mb-8">
+        <!-- Placeholder for cart items -->
+        <!-- Example Cart Item (repeat for each item) -->
+        <div class="flex items-center border-b border-gray-200 dark:border-gray-700 py-4 last:border-b-0">
+          <img src="https://placehold.co/100x100/e2e8f0/94a3b8?text=Sản+phẩm" alt="Tên sản phẩm" class="w-20 h-20 object-cover rounded-md mr-4">
+          <div class="flex-grow">
+            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Tên Sản Phẩm Mẫu</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Mô tả ngắn gọn</p>
+            <p class="text-red-500 font-bold mt-1">$99.00</p>
+          </div>
+          <div class="flex items-center">
+            <input type="number" value="1" min="1" class="w-16 text-center border border-gray-300 dark:border-gray-600 rounded-md p-2 bg-white dark:bg-gray-700 focus:ring-red-500 focus:border-red-500">
+            <button class="ml-3 text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 transition-colors" aria-label="Remove item">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+            </button>
+          </div>
+        </div>
+        <!-- End Example Cart Item -->
+
+        <div class="text-center py-10 text-gray-500 dark:text-gray-400" id="emptyCartMessage">
+          <svg class="w-16 h-16 mx-auto mb-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          <p class="text-xl">Giỏ hàng của bạn đang trống.</p>
+          <a href="index.html#products" class="mt-4 inline-block bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-300">
+            Tiếp tục mua sắm
+          </a>
+        </div>
+      </div>
+
+      <!-- Cart Summary -->
+      <div class="border-t border-gray-200 dark:border-gray-700 pt-6" id="cartSummary">
+        <div class="flex justify-between items-center mb-2">
+          <p class="text-gray-600 dark:text-gray-300">Tạm tính:</p>
+          <p class="font-semibold text-gray-800 dark:text-white" id="cartSubtotal">$99.00</p>
+        </div>
+        <div class="flex justify-between items-center mb-2">
+          <p class="text-gray-600 dark:text-gray-300">Phí vận chuyển:</p>
+          <p class="font-semibold text-gray-800 dark:text-white" id="shippingCost">Tính khi thanh toán</p>
+        </div>
+        <div class="flex justify-between items-center text-xl font-bold mt-4 pt-4 border-t border-dashed border-gray-300 dark:border-gray-600">
+          <p class="text-gray-800 dark:text-white">Tổng cộng:</p>
+          <p class="text-red-500" id="cartTotal">$99.00</p>
+        </div>
+
+        <a href="checkout.html" id="proceedToCheckoutBtn" class="block w-full mt-8 bg-red-500 hover:bg-red-600 text-white font-semibold py-3.5 px-6 rounded-lg text-center transition-colors duration-300 text-base shadow-md hover:shadow-lg">
+          Tiến Hành Thanh Toán
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-400 dark:bg-gray-900 dark:text-gray-500 py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8 text-sm">
+        <div>
+          <h4 class="text-lg font-semibold text-white dark:text-gray-200 mb-4">Yapee Vietnam</h4>
+          <p class="mb-4">Nâng tầm cuộc sống hiện đại với thiết bị thông minh. Chất lượng và dịch vụ hàng đầu.</p>
+           <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white dark:hover:text-red-400 transition-colors" aria-label="Facebook"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" /></svg></a>
+            <a href="#" class="text-gray-400 hover:text-white dark:hover:text-red-400 transition-colors" aria-label="Instagram"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.85-.069zM12 0C8.74 0 8.333.014 7.053.06 2.05 0.222 1.116 1.4 1.03 4.384.984 6.064.98 6.623.98 12s0 5.936.004 7.616C1.07 22.6 2.005 23.778 7.008 23.94c1.281.046 1.689.06 4.949.06 3.26 0 3.668-.014 4.949-.06 4.99-0.162 5.929-1.34 5.975-4.324.004-1.68.004-2.239.004-7.616s0-5.936-.004-7.616c-0.046-2.984-1.07-4.162-5.975-4.324-1.281-.045-1.689-.06-4.949-.06z" /><path d="M12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8z" /><circle cx="18.406" cy="5.594" r="1.44" /></svg></a>
+            <a href="#" class="text-gray-400 hover:text-white dark:hover:text-red-400 transition-colors" aria-label="Twitter"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" /></svg></a>
+          </div>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold text-white dark:text-gray-200 mb-4">Liên Kết Nhanh</h4>
+          <ul class="space-y-2">
+            <li><a href="index.html#products" class="hover:text-red-400 transition-colors">Sản phẩm</a></li>
+            <li><a href="index.html#promotions" class="hover:text-red-400 transition-colors">Khuyến mãi</a></li>
+            <li><a href="#" class="hover:text-red-400 transition-colors">Chính sách bảo mật</a></li>
+            <li><a href="#" class="hover:text-red-400 transition-colors">Điều khoản dịch vụ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold text-white dark:text-gray-200 mb-4">Hỗ Trợ Khách Hàng</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="hover:text-red-400 transition-colors">Trung tâm hỗ trợ</a></li>
+            <li><a href="#" class="hover:text-red-400 transition-colors">FAQ</a></li>
+            <li><a href="index.html#contact" class="hover:text-red-400 transition-colors">Liên hệ</a></li>
+          </ul>
+        </div>
+         <div>
+          <h4 class="text-lg font-semibold text-white dark:text-gray-200 mb-4">Nhận Tin Mới</h4>
+          <p class="mb-3">Đăng ký để nhận ưu đãi đặc biệt và cập nhật sản phẩm mới nhất.</p>
+          <form class="flex">
+            <input type="email" placeholder="Email của bạn" class="form-input py-2.5 text-sm w-full rounded-l-md focus:outline-none text-gray-900 dark:bg-gray-700 dark:border-gray-600" required>
+            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-r-md text-sm font-semibold transition-colors">Đăng ký</button>
+          </form>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 dark:border-gray-600 pt-8 text-center text-xs">
+        <p>&copy; <span id="currentYear"></span> Yapee Vietnam. Phát triển bởi AI. Tất cả quyền được bảo lưu.</p>
+      </div>
+    </div>
+  </footer>
+  
+  <script src="js/main.js"></script>
+  <script src="js/cart.js" defer></script> <!-- Placeholder for cart specific logic -->
+</body>
+</html>
+
+
+
+
