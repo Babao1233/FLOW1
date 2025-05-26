@@ -13,7 +13,8 @@ const TRUSTED_DOMAINS = [
   "https://fonts.googleapis.com",
   "https://fonts.gstatic.com",
   "https://cdn.jsdelivr.net",
-  "https://cdn.tailwindcss.com"
+  "https://cdn.tailwindcss.com",
+  "https://cdnjs.cloudflare.com"
 ];
 
 // Tạo middleware CSP
@@ -21,7 +22,7 @@ const contentSecurityPolicy = (req, res, next) => {
   // Cấu hình CSP
   const cspConfig = {
     defaultSrc: [SELF],
-    scriptSrc: [SELF, ...TRUSTED_DOMAINS, INLINE, EVAL], // Thêm EVAL chỉ cho môi trường dev
+    scriptSrc: [SELF, ...TRUSTED_DOMAINS, INLINE, EVAL], // Cho phép các CDN phổ biến và inline/eval cho dev
     styleSrc: [SELF, ...TRUSTED_DOMAINS, INLINE],
     imgSrc: [SELF, ...TRUSTED_DOMAINS, DATA, BLOB],
     fontSrc: [SELF, ...TRUSTED_DOMAINS, DATA],
